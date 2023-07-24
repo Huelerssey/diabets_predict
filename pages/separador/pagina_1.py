@@ -1,5 +1,5 @@
 import streamlit as st
 
 
-def pagina1():
-    st.write("Hello world 1")
+def home():
+    st.title("Página Inicial")

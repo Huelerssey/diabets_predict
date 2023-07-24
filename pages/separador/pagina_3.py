@@ -1,5 +1,5 @@
 import streamlit as st
 
 
-def pagina3():
-    st.write("Hello world 3")
+def prever_diabetes():
+    st.title("Modelo de previsão de Diabetes")
