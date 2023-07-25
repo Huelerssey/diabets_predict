@@ -25,7 +25,7 @@ with st.sidebar:
         menu_title=None,
         options=["Inicio", "Projeto", "Previsão", "Apresentação"],
         #https://icons.getbootstrap.com
-        icons=['house', 'journal-code', 'clipboard-data', 'capsule'],
+        icons=['house', 'pin-angle', 'clipboard-data', 'journal-medical'],
         default_index=0,
         orientation='vertical',
     )
