@@ -2,6 +2,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+from imblearn.under_sampling import ClusterCentroids
+from sklearn.cluster import MiniBatchKMeans
+from sklearn.metrics import confusion_matrix, recall_score
+from imblearn.under_sampling import NearMiss
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import ADASYN
+from imblearn.combine import SMOTEENN
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 
 
 ## 1 - INTRODUÇÃO - ##
@@ -82,23 +96,12 @@ tabela = tabela[tabela["gender"] != 'Other']
 # remove os pacientes com registro não informado sobre tabagismo
 tabela = tabela[tabela["smoking_history"] != 'No Info']
 
-# Inicializa o codificador para a coluna genero
-enc_gender = OneHotEncoder(sparse_output=False)
+# Inicializa o label encoder
+le = LabelEncoder()
 
-# Ajusta o codificador e transforma os dados
-gender_encoded = enc_gender.fit_transform(tabela[['gender']])
-gender_encoded_df = pd.DataFrame(gender_encoded, columns=enc_gender.get_feature_names_out(['gender']))
-
-# Inicializa o codificador para a coluna histórico de tabagismo
-enc_smoking = OneHotEncoder(sparse_output=False)
-
-# Ajusta o codificador e transforma os dados
-smoking_encoded = enc_smoking.fit_transform(tabela[['smoking_history']])
-smoking_encoded_df = pd.DataFrame(smoking_encoded, columns=enc_smoking.get_feature_names_out(['smoking_history']))
-
-# deleta as colunas originais e insere as colunas codificadas no dataframe
-tabela = tabela.drop(['gender', 'smoking_history'], axis=1)
-tabela = pd.concat([tabela, gender_encoded_df, smoking_encoded_df], axis=1)
+# reajusta as colunas de texto para números
+tabela['gender'] = le.fit_transform(tabela['gender'])
+tabela['smoking_history'] = le.fit_transform(tabela['smoking_history'])
 
 ## 4 - LIMPEZA E TRATAMENTO DE DADOS - ##
 
@@ -147,7 +150,7 @@ def limites(coluna):
     return (q1 - 1.5 * amplitude, q3 + 1.5 * amplitude)
 
 # plota 2 gráficos sendo o primeiro com os outliers e o segundo, sem
-def diagrama_caixa(coluna):
+def box_plot(coluna):
     fig, (ax1, ax2) = plt.subplots(1, 2)
     fig.set_size_inches(15,5)
     sns.boxplot(x=coluna, ax=ax1)
@@ -168,6 +171,14 @@ def grafico_pizza(coluna):
     plt.ylabel('')
     plt.show()
 
+# cada coluna do dataframe terá os gráficos plotados
+def plot_all_columns(df):
+    for col in df.columns:
+        print(f"Coluna: {col}")
+        box_plot(df[col])
+        histograma(df[col])
+        grafico_pizza(df[col])
+
 # Exclui outliers e retorna o novo dataframe e também a quantidade de linhas removidas
 def excluir_outliers(df, nome_coluna):
     qtde_linhas = df.shape[0]
@@ -178,11 +189,265 @@ def excluir_outliers(df, nome_coluna):
 
 ## FUNÇÕES AUXILIARES ##
 
+# plota todos os gráficos de todas as colunas para análise
+# plot_all_columns(tabela)
 
+#excluir outliers da coluna
+tabela, linhas_removidas = excluir_outliers(tabela, 'bmi')
+print(f'{linhas_removidas} linhas removidas da coluna bmi')
 
 ## 5 - ANÁLISE EXPLORATÓRIA DE DADOS - ##
 
 ## 6 - MODELANDO UMA INTELIGÊNCIA ARTIFICIAL - ##
 
+# # definindo dados de treino e de teste
+# y = tabela['diabetes']
+# x = tabela.drop('diabetes', axis=1)
+
+# # dividindo a base entre treino e teste
+# x_treino, x_teste, y_treino, y_teste = train_test_split(x, y, test_size=0.30, random_state=42, stratify=y)
+
+# # função para avaliar modelos
+# def avaliar_modelos(modelos, x_treino, y_treino, x_teste, y_teste, resampling_methods):
+#     resultados = {}
+    
+#     for nome, modelo in modelos.items():
+#         for resampling_method in resampling_methods:
+#             if resampling_method == 'Random Undersample':
+#                 rus = RandomUnderSampler(random_state=42)
+#                 x_res, y_res = rus.fit_resample(x_treino, y_treino)
+#             elif resampling_method == 'Undersample ClusterCentroid':
+#                 cc = ClusterCentroids(estimator=MiniBatchKMeans(n_init=1, random_state=0), random_state=42)
+#                 x_res, y_res = cc.fit_resample(x_treino, y_treino)
+#             elif resampling_method == 'Undersample NearMiss':
+#                 nm = NearMiss()
+#                 x_res, y_res = nm.fit_resample(x_treino, y_treino)
+#             elif resampling_method == 'Random Oversample':
+#                 ros = RandomOverSampler(random_state=42, shrinkage=0.7)
+#                 x_res, y_res = ros.fit_resample(x_treino, y_treino)
+#             elif resampling_method == 'Oversample SMOTE':
+#                 sm = SMOTE(random_state=42)
+#                 x_res, y_res = sm.fit_resample(x_treino, y_treino)
+#             elif resampling_method == 'Oversample ADASYN':
+#                 ada = ADASYN(random_state=42)
+#                 x_res, y_res = ada.fit_resample(x_treino, y_treino)
+#             elif resampling_method == 'Combined Over/Undersample':
+#                 sme = SMOTEENN(random_state=42)
+#                 x_res, y_res = sme.fit_resample(x_treino, y_treino)
+#             else:
+#                 raise ValueError(f'Método de resampling desconhecido: {resampling_method}')
+            
+#             modelo.fit(x_res, y_res)
+#             y_pred = modelo.predict(x_teste)
+#             cm = confusion_matrix(y_teste, y_pred)
+#             rs = recall_score(y_teste, y_pred)
+#             sa = accuracy_score(y_teste, y_pred)
+            
+#             if nome not in resultados:
+#                 resultados[nome] = {}
+            
+#             resultados[nome][resampling_method] = {
+#                 'Matriz de confusão': cm,
+#                 'Recall': rs,
+#                 'Acurácia': sa
+#             }
+    
+#     return resultados
+
+# # Criar o modelo de árvore de decisão
+# clf = tree.DecisionTreeClassifier(random_state=42)
+
+# # Criar o modelo de Random Forest
+# clfrf = RandomForestClassifier(random_state=42)
+
+# # Criar o modelo de Extra Trees
+# clfet = ExtraTreesClassifier(random_state=42)
+
+# # Criar o dicionário com os nomes dos modelos e as instâncias correspondentes
+# modelos = {
+#     'Decision Tree': clf,
+#     'Random Forest': clfrf,
+#     'Extra Trees': clfet
+# }
+
+# # Definir os métodos de resampling a serem utilizados
+# resampling_methods = ['Random Undersample', 'Undersample ClusterCentroid', 'Undersample NearMiss',
+#                       'Random Oversample', 'Oversample SMOTE', 'Oversample ADASYN',
+#                       'Combined Over/Undersample']
+
+# # Chamar a função para avaliar os modelos
+# resultados = avaliar_modelos(modelos, x_treino, y_treino, x_teste, y_teste, resampling_methods)
+
+# # Imprimir os resultados
+# for nome, resultado in resultados.items():
+#     print(f"Modelo: {nome}")
+#     for resampling_method, res in resultado.items():
+#         print(f"Método de resampling: {resampling_method}")
+#         print(f"Matriz de confusão:\n {res['Matriz de confusão']}")
+#         print(f"Recall: {res['Recall']:.2f}%")
+#         print(f"Acurácia: {res['Acurácia']:.2f}%")
 
 ## 6 - MODELANDO UMA INTELIGÊNCIA ARTIFICIAL - ##
+
+## 7 - RESULTADOS - ##
+
+##                                      DECISION TREE                                 ##
+
+# Método de resampling: Random Undersample
+# Matriz de confusão:
+#  [[14077  2098]
+#  [  249  1606]]
+# Recall: 0.87%
+# Acurácia: 0.87%
+
+# Método de resampling: Undersample ClusterCentroid
+# Matriz de confusão:
+#  [[11076  5099]
+#  [   56  1799]]
+# Recall: 0.97%
+# Acurácia: 0.71%
+
+# Método de resampling: Undersample NearMiss
+# Matriz de confusão:
+#  [[8536 7639]
+#  [ 321 1534]]
+# Recall: 0.83%
+# Acurácia: 0.56%
+
+# Método de resampling: Random Oversample
+# Matriz de confusão:
+#  [[15499   676]
+#  [  458  1397]]
+# Recall: 0.75%
+# Acurácia: 0.94%
+
+# Método de resampling: Oversample SMOTE
+# Matriz de confusão:
+#  [[15461   714]
+#  [  471  1384]]
+# Recall: 0.75%
+# Acurácia: 0.93%
+
+# Método de resampling: Oversample ADASYN
+# Matriz de confusão:
+#  [[15497   678]
+#  [  487  1368]]
+# Recall: 0.74%
+# Acurácia: 0.94%
+
+# Método de resampling: Combined Over/Undersample
+# Matriz de confusão:
+#  [[14931  1244]
+#  [  333  1522]]
+# Recall: 0.82%
+# Acurácia: 0.91%
+
+##                                      RANDOM FOREST                                 ##
+
+# Método de resampling: Random Undersample
+# Matriz de confusão:
+#  [[14373  1802]
+#  [  191  1664]]
+# Recall: 0.90%
+# Acurácia: 0.89%
+
+# Método de resampling: Undersample ClusterCentroid
+# Matriz de confusão:
+#  [[11500  4675]
+#  [   46  1809]]
+# Recall: 0.98%
+# Acurácia: 0.74%
+
+# Método de resampling: Undersample NearMiss
+# Matriz de confusão:
+#  [[10251  5924]
+#  [  375  1480]]
+# Recall: 0.80%
+# Acurácia: 0.65%
+
+# Método de resampling: Random Oversample
+# Matriz de confusão:
+#  [[15798   377]
+#  [  516  1339]]
+# Recall: 0.72%
+# Acurácia: 0.95%
+
+# Método de resampling: Oversample SMOTE
+# Matriz de confusão:
+#  [[15699   476]
+#  [  487  1368]]
+# Recall: 0.74%
+# Acurácia: 0.95%
+
+# Método de resampling: Oversample ADASYN
+# Matriz de confusão:
+#  [[15502   673]
+#  [  458  1397]]
+# Recall: 0.75%
+# Acurácia: 0.94%
+
+# Método de resampling: Combined Over/Undersample
+# Matriz de confusão:
+#  [[14926  1249]
+#  [  289  1566]]
+# Recall: 0.84%
+# Acurácia: 0.91%
+
+##                                      EXTRA TREES                                   ##
+
+# Método de resampling: Random Undersample
+# Matriz de confusão:
+#  [[14305  1870]
+#  [  192  1663]]
+# Recall: 0.90%
+# Acurácia: 0.89%
+
+# Método de resampling: Undersample ClusterCentroid
+# Matriz de confusão:
+#  [[11885  4290]
+#  [   76  1779]]
+# Recall: 0.96%
+# Acurácia: 0.76%
+
+# Método de resampling: Undersample NearMiss
+# Matriz de confusão:
+#  [[11756  4419]
+#  [  368  1487]]
+# Recall: 0.80%
+# Acurácia: 0.73%
+
+# Método de resampling: Random Oversample
+# Matriz de confusão:
+#  [[15493   682]
+#  [  447  1408]]
+# Recall: 0.76%
+# Acurácia: 0.94%
+
+# Método de resampling: Oversample SMOTE
+# Matriz de confusão:
+#  [[15569   606]
+#  [  484  1371]]
+# Recall: 0.74%
+# Acurácia: 0.94%
+
+# Método de resampling: Oversample ADASYN
+# Matriz de confusão:
+#  [[15335   840]
+#  [  452  1403]]
+# Recall: 0.76%
+# Acurácia: 0.93%
+
+# Método de resampling: Combined Over/Undersample
+# Matriz de confusão:
+#  [[14816  1359]
+#  [  283  1572]]
+# Recall: 0.85%
+# Acurácia: 0.91%
+
+## 7 - RESULTADOS - ##
+
+## 8 - ESCOLHENDO O MELHOR MODELO E COLOCANDO EM PRODUÇÃO - ##
+
+
+
+## 8 - ESCOLHENDO O MELHOR MODELO E COLOCANDO EM PRODUÇÃO - ##
