@@ -1,3 +1,4 @@
+import joblib
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -448,6 +449,31 @@ print(f'{linhas_removidas} linhas removidas da coluna bmi')
 
 ## 8 - ESCOLHENDO O MELHOR MODELO E COLOCANDO EM PRODUÇÃO - ##
 
+# MODELO ESCOLHIDO: Random Forest - Random Undersample
 
+# definindo dados de treino e de teste
+y = tabela['diabetes']
+x = tabela.drop('diabetes', axis=1)
+
+# dividindo a base entre treino e teste
+x_treino, x_teste, y_treino, y_teste = train_test_split(x, y, random_state=42, stratify=y)
+
+# Criar o modelo de Random Forest
+clf = RandomForestClassifier(random_state=42)
+
+# Instanciar o RandomUnderSampler
+rus = RandomUnderSampler(random_state=42)
+
+# Aplicar o resampling
+x_res, y_res = rus.fit_resample(x_treino, y_treino)
+
+# treina o modelo
+clf.fit(x_res, y_res)
+
+# testa o modelo
+y_pred = clf.predict(x_teste)
+
+# colocando modelo para produção
+joblib.dump(clf, "modelo_treinado.pkl")
 
 ## 8 - ESCOLHENDO O MELHOR MODELO E COLOCANDO EM PRODUÇÃO - ##
