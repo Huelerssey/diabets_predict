@@ -19,7 +19,8 @@ def prever_diabetes():
         # Função para fazer previsões
         def predict_diabetes(model, patient_info):
             prediction = model.predict(patient_info)
-            return prediction
+            prediction_proba = model.predict_proba(patient_info)[0, int(prediction[0])]
+            return prediction, prediction_proba
 
         # Mapeamento da coluna gender
         gender_mapping = {
@@ -69,8 +70,8 @@ def prever_diabetes():
                                         columns=['gender', 'age', 'hypertension', 'heart_disease', 'smoking_history', 'bmi', 'HbA1c_level', 'blood_glucose_level'])
 
             # Fazer a previsão
-            prediction = predict_diabetes(clf, patient_info)
+            prediction, prediction_proba = predict_diabetes(clf, patient_info)
             if prediction[0] == 1:
-                st.write('O paciente tem diabetes.')
+                st.success(f'O modelo classificou o paciente como diabético com {prediction_proba*100:.2f}% de chance de acerto.')
             else:
-                st.write('O paciente não tem diabetes.')
+                st.success(f'O modelo classificou o paciente como não diabético com {prediction_proba*100:.2f}% de chance de acerto.')

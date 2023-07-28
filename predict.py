@@ -473,6 +473,9 @@ clf.fit(x_res, y_res)
 # testa o modelo
 y_pred = clf.predict(x_teste)
 
+# obtendo a probabilidade de ser da classe 1 (diabetes)
+prob_diabetes = clf.predict_proba(x_teste)[:, 1]
+
 # colocando modelo para produção
 joblib.dump(clf, "modelo_treinado.pkl")
 
