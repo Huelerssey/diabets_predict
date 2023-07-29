@@ -55,12 +55,29 @@ with st.sidebar:
     st.write("")
     st.write("")
     st.write("")
-    st.write("")
-    st.write("")
-    st.write("")
-    # Marca d'água
+
+    # Footer da barra lateral
     st.write("---")
     st.markdown("<h5 style='text-align: center; color: lightgray;'>Developed By: Huelerssey Rodrigues</h5>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <a href="https://github.com/Huelerssey" target="_blank">
+                <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100" />
+            </a>
+        </div>
+        <div>
+            <a href="https://www.linkedin.com/in/huelerssey-rodrigues-a3145a261/" target="_blank">
+                <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" width="100" />
+            </a>
+        </div>
+        <div>
+            <a href="https://api.whatsapp.com/send?phone=5584999306130" target="_blank">
+                <img src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" width="100" />
+            </a>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Retorna a pagina 1
 if opcao_selecionada == "Inicio":
