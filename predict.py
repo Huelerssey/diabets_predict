@@ -104,26 +104,24 @@ le = LabelEncoder()
 tabela['gender'] = le.fit_transform(tabela['gender'])
 tabela['smoking_history'] = le.fit_transform(tabela['smoking_history'])
 
+# salva a base de dados modelada para uso no streamlit
+tabela.to_pickle("dataframe_modelado.pkl")
+
 ## 4 - LIMPEZA E TRATAMENTO DE DADOS - ##
 
 ## 5 - ANÁLISE EXPLORATÓRIA DE DADOS - ##
 
 # demosntra a correlação dos dados com a diabetes antes de tratar de outliers
 # print(tabela.corr()['diabetes'])
-# age                            0.262460
-# hypertension                   0.191534
-# heart_disease                  0.169040
-# bmi                            0.203960
-# HbA1c_level                    0.440930
-# blood_glucose_level            0.451358
-# diabetes                       1.000000
-# gender_Female                 -0.002422
-# gender_Male                    0.002422
-# smoking_history_current        0.003198
-# smoking_history_ever          -0.009651
-# smoking_history_former        -0.005625
-# smoking_history_never          0.007710
-# smoking_history_not current   -0.002097
+# gender                 0.056472
+# age                    0.262460
+# hypertension           0.191534
+# heart_disease          0.169040
+# smoking_history       -0.016840
+# bmi                    0.203960
+# HbA1c_level            0.440930
+# blood_glucose_level    0.451358
+# diabetes               1.000000
 
 # gráfico de correlação dos dados com a diabetes antes de tratar de outliers
 # correlation = tabela.corr()[['diabetes']]
@@ -477,6 +475,6 @@ y_pred = clf.predict(x_teste)
 prob_diabetes = clf.predict_proba(x_teste)[:, 1]
 
 # colocando modelo para produção
-joblib.dump(clf, "modelo_treinado.pkl")
+# joblib.dump(clf, "modelo_treinado.pkl")
 
 ## 8 - ESCOLHENDO O MELHOR MODELO E COLOCANDO EM PRODUÇÃO - ##

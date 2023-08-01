@@ -14,7 +14,7 @@ def prever_diabetes():
     # coluna 1
     with col1:
         # Carregar o modelo treinado
-        clf = joblib.load("modelo_treinado.pkl")
+        clf = joblib.load("arquivos_pkl/modelo_treinado.pkl")
 
         # Função para fazer previsões
         def predict_diabetes(model, patient_info):
