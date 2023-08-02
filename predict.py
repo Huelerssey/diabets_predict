@@ -170,6 +170,13 @@ def grafico_pizza(coluna):
     plt.ylabel('')
     plt.show()
 
+# plota um gráfico de contagem
+def countplot(coluna):
+    plt.figure(figsize=(10, 6))
+    sns.countplot(x=coluna, data=tabela)
+    plt.ylabel('')
+    return plt.show()
+
 # cada coluna do dataframe terá os gráficos plotados
 def plot_all_columns(df):
     for col in df.columns:
@@ -177,6 +184,7 @@ def plot_all_columns(df):
         box_plot(df[col])
         histograma(df[col])
         grafico_pizza(df[col])
+        countplot(df[col])
 
 # Exclui outliers e retorna o novo dataframe e também a quantidade de linhas removidas
 def excluir_outliers(df, nome_coluna):

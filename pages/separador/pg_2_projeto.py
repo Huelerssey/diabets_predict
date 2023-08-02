@@ -60,20 +60,20 @@ def construcao_projeto():
     tabela['smoking_history'] = le.fit_transform(tabela['smoking_history'])
     """
     st.code(codigo2, language="python")
-    st.write("É importante notar que a etapa de limpeza de dados em um projeto de ciência de dados geralmente não é um processo linear. Frequentemente, pode ser necessário retornar a esta fase para ajustar ou remodelar os dados à medida que surgem novas necessidades ao longo do projeto. Felizmente, neste caso, o conjunto de dados que temos já veio relativamente limpo. Isso nos poupa tempo significativo e nos permite concentrar nossos esforços nas etapas subsequentes de análise e modelagem de dados.")
+    st.write("É importante notar que a etapa de limpeza de dados em um projeto de ciência de dados geralmente não é um processo linear. Frequentemente, pode ser necessário retornar a esta fase para ajustar ou remodelar os dados à medida que surgem novas necessidades ao longo do projeto. Felizmente, neste caso, o conjunto de dados que temos já veio relativamente limpo. Isso nos poupa tempo significativo e nos permite concentrar nossos esforços nas próximas etapas.")
     st.write("")
 
     st.header("📌 Análise exploratória de dados")
     st.write("Nesta etapa, queremos entender como as diferentes variáveis estão correlacionadas com a diabetes. Nosso objetivo é identificar quais fatores são os mais influentes na previsão da doença. Além disso, usamos várias visualizações para entender a distribuição de nossos dados, identificar possíveis outliers e verificar se existe algum desequilíbrio em nossa variável de destino.")
-    st.write("É uma prática recomendada dedicar uma seção inteira para a construção das funções que auxiliarão nas análises e na visualização de gráficos. Desta forma, antes de aplicá-las aos dados, garantimos uma organização e padronização rigorosas no projeto. A seguir, apresentamos as funções auxiliares desenvolvidas para este propósito:")
+    st.write("Pessoalmente gosto de dedicar uma seção inteira para a construção das funções que auxiliarão nas análises e na visualização de gráficos. Desta forma, antes de aplicá-las aos dados, garantimos uma organização e padronização rigorosas no projeto.")
     codigo3 = """
     ## FUNÇÕES AUXILIARES ##
 
     # gráfico de correlação dos dados com a diabetes
-    correlation = tabela.corr()[['diabetes']]
-    correlation_sorted = correlation.sort_values(by='diabetes', ascending=False)
+    correlacao = tabela.corr()[['diabetes']]
+    correlacao_organizada = correlacao.sort_values(by='diabetes', ascending=False)
     plt.figure(figsize=(18, 7))
-    sns.heatmap(correlation_sorted, cmap="Blues", annot=True, fmt='.0%')
+    sns.heatmap(correlacao_organizada, cmap="Blues", annot=True, fmt='.0%')
     plt.show()
 
     # função que retorna todos os valores únicos de uma coluna
@@ -112,7 +112,14 @@ def construcao_projeto():
         plt.figure(figsize=(10, 6))
         coluna.value_counts().plot(kind='pie', autopct='%1.1f%%')
         plt.ylabel('')
-        plt.show()
+        return plt.show()
+    
+    # plota um gráfico de contagem
+    def countplot(coluna):
+    plt.figure(figsize=(10, 6))
+    sns.countplot(x=coluna, data=tabela)
+    plt.ylabel('')
+    return plt.show()
 
     # cada coluna do dataframe terá os gráficos plotados
     def plot_all_columns(df):
@@ -121,6 +128,7 @@ def construcao_projeto():
             box_plot(df[col])
             histograma(df[col])
             grafico_pizza(df[col])
+            countplot(df[col])
 
     # Exclui outliers e retorna o novo dataframe e também a quantidade de linhas removidas
     def excluir_outliers(df, nome_coluna):
@@ -145,94 +153,116 @@ def construcao_projeto():
     annotations = correlation_percent.applymap(lambda x: f'{x:.0f}%')
 
     # cria um gráfico de calor
-    fig, ax = plt.subplots(figsize=(18, 7))
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.heatmap(correlation_sorted, cmap="Blues", annot=annotations, fmt='', ax=ax)
     st.pyplot(fig)
     st.write("")
     
     # variáveis categóricas
-    st.write("Gráficos de barras para variáveis categóricas - Esses gráficos mostram a distribuição das variáveis categóricas 'gender', 'smoking_history' e 'diabetes'. Podemos ver quantas observações temos para cada categoria.")
+    st.write("**Gráficos de barras para variáveis categóricas** - Esses gráficos mostram a distribuição das variáveis categóricas 'gender', 'smoking_history' e 'diabetes'. Podemos ver quantas observações temos para cada categoria.")
     
     # grafico de distribuição
     st.subheader("Distribuição de diabetes por pacientes")
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.countplot(x='diabetes', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # gráfico de distribuição para 'gender'
     st.subheader('Distribuição de gênero por pacientes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.countplot(x='gender', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # gráfico de distribuição para 'smoking_history'
     st.subheader('Distribuição de histórico de tabagismo por pacientes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.countplot(x='smoking_history', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
 
-    st.write("Histogramas para variáveis numéricas - Esses gráficos mostram a distribuição das variáveis numéricas 'idade', 'bmi', 'HbA1c_level' e 'blood_glucose_level'. A linha suave (KDE) representa uma estimativa da densidade de probabilidade dos dados, que pode ser útil para identificar a forma da distribuição dos dados.")
+    st.write("**Histogramas para variáveis numéricas** - Esses gráficos mostram a distribuição das variáveis numéricas 'idade', 'bmi', 'HbA1c_level' e 'blood_glucose_level'. A linha suave (KDE) representa uma estimativa da densidade de probabilidade dos dados, que pode ser útil para identificar a forma da distribuição dos dados.")
 
     # Histograma para 'age'
     st.subheader('Distribuição de idade por pacientes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.histplot(carregar_dados()['age'], bins=30, kde=True, ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # Histograma para 'bmi'
     st.subheader('Distribuição de indice de massa corporal por pacientes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.histplot(carregar_dados()['bmi'], bins=30, kde=True, ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # Histograma para 'HbA1c_level'
     st.subheader('Distribuição de hemoglobina glicada por pacientes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.histplot(carregar_dados()['HbA1c_level'], bins=30, kde=True, ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # Histograma para 'blood_glucose_level'
     st.subheader('Distribuição de nível de glicose no sangue por pacientes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.histplot(carregar_dados()['blood_glucose_level'], bins=30, kde=True, ax=ax)
     st.pyplot(fig)
     st.write("")
 
-    st.write("Box plots para variáveis numéricas por 'diabetes' - Esses gráficos mostram a distribuição das variáveis numéricas divididas por 'diabetes'. Isso permite ver a diferença na distribuição dessas variáveis para pessoas com e sem diabetes, que nos auxilia a identificar outliers (valores extremos). Cada box plot mostra a mediana (a linha no meio da caixa), os quartis superior e inferior (as bordas da caixa) e os 'bigodes', que indicam a faixa dentro da qual a maioria dos dados se encontra.")
+    st.write("**Box plots para variáveis numéricas por 'diabetes'** - Esses gráficos mostram a distribuição das variáveis numéricas divididas por 'diabetes'. Isso permite ver a diferença na distribuição dessas variáveis para pessoas com e sem diabetes, que nos auxilia a identificar outliers (valores extremos). Cada box plot mostra a mediana (a linha no meio da caixa), os quartis superior e inferior (as bordas da caixa) e os 'bigodes', que indicam a faixa dentro da qual a maioria dos dados se encontra.")
 
     # Boxplot para 'age'
     st.subheader('Distribuição de Idade por Diabetes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='age', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # Boxplot para 'bmi'
     st.subheader('Distribuição de Indice de massa corporal por Diabetes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='bmi', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # Boxplot para 'HbA1c_level'
     st.subheader('Distribuição de Hemoglobina glicada por Diabetes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='HbA1c_level', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
 
     # Boxplot para 'blood_glucose_level'
     st.subheader('Distribuição de Nível de glicose no sangue por Diabetes')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='blood_glucose_level', data=carregar_dados(), ax=ax)
     st.pyplot(fig)
     st.write("")
+
+    # >> ÁREA DE TESTE <<
+    # Create three columns
+    col1, col2, col3 = st.columns(3)
+
+    # First column
+    col1.subheader('Distribuição de idade por pacientes')
+    fig, ax = plt.subplots(figsize=(5, 4))
+    sns.histplot(carregar_dados()['age'], bins=30, kde=True, ax=ax)
+    col1.pyplot(fig)
+
+    # Second column
+    col2.subheader('Distribuição de indice de massa corporal por pacientes')
+    fig, ax = plt.subplots(figsize=(5, 4))
+    sns.histplot(carregar_dados()['bmi'], bins=30, kde=True, ax=ax)
+    col2.pyplot(fig)
+
+    # Third column
+    col3.subheader('Distribuição de hemoglobina glicada por pacientes')
+    fig, ax = plt.subplots(figsize=(5, 4))
+    sns.histplot(carregar_dados()['HbA1c_level'], bins=30, kde=True, ax=ax)
+    col3.pyplot(fig)
 
     st.write("")
 
