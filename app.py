@@ -94,4 +94,3 @@ elif opcao_selecionada == "Previsão":
 # Retorna a pagina 3
 elif opcao_selecionada == "Apresentação":
     ApresentacaoProjeto.apresentacao()
-
