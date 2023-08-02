@@ -27,7 +27,7 @@ with open("animacoes/pagina_inicial3.json") as source:
 
 # Menu de navegação lateral
 with st.sidebar:
-    st_lottie(animacao_3, height=100, width=270)
+    st_lottie(animacao_3, height=100, width=300)
     st.write("---")
     opcao_selecionada = option_menu(
         menu_title="Menu Principal",
