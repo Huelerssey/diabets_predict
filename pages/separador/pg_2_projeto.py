@@ -139,8 +139,9 @@ def construcao_projeto():
         return df, linhas_removidas
     """
     st.code(codigo3, language='python')
-    st.write("Com todas as funções construidas, vamos colocar a mão na massa nas análises! Vamos começar com um gráfico de calor da correlação entre as características e a variável de resultado diabetes. As cores mais escuras indicam uma correlação positiva mais forte.")
-    
+    st.write("Com todas as funções construidas, vamos colocar a mão na massa nas análises!")
+    st.write("**Gráfico de calor** - para correlação entre as características e a variável de resultado diabetes. As cores mais escuras indicam uma correlação positiva mais forte.")
+
     # titulo do gráfico
     st.subheader('Correlação das caracteristicas com a Diabetes')
 
@@ -161,108 +162,97 @@ def construcao_projeto():
     # variáveis categóricas
     st.write("**Gráficos de barras para variáveis categóricas** - Esses gráficos mostram a distribuição das variáveis categóricas 'gender', 'smoking_history' e 'diabetes'. Podemos ver quantas observações temos para cada categoria.")
     
-    # grafico de distribuição
-    st.subheader("Distribuição de diabetes por pacientes")
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.countplot(x='diabetes', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
-    st.write("")
+    # cria 3 colunas
+    col1, col2, col3 = st.columns(3)
 
-    # gráfico de distribuição para 'gender'
-    st.subheader('Distribuição de gênero por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.countplot(x='gender', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
-    st.write("")
+    with st.container():
+    # grafico de distribuição para diabetes
+        col1.subheader("Distribuição de diabetes por pacientes")
+        fig, ax = plt.subplots(figsize=(5, 4))
+        sns.countplot(x='diabetes', data=carregar_dados(), ax=ax)
+        col1.pyplot(fig)
+        st.write("")
 
-    # gráfico de distribuição para 'smoking_history'
-    st.subheader('Distribuição de histórico de tabagismo por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.countplot(x='smoking_history', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
-    st.write("")
+        # gráfico de distribuição para 'gender'
+        col2.subheader('Distribuição de gênero por pacientes')
+        fig, ax = plt.subplots(figsize=(5, 4))
+        sns.countplot(x='gender', data=carregar_dados(), ax=ax)
+        col2.pyplot(fig)
+        st.write("")
+
+        # gráfico de distribuição para 'smoking_history'
+        col3.subheader('Distribuição de histórico de tabagismo por pacientes')
+        fig, ax = plt.subplots(figsize=(5, 4.05))
+        sns.countplot(x='smoking_history', data=carregar_dados(), ax=ax)
+        col3.pyplot(fig)
+        st.write("")
 
     st.write("**Histogramas para variáveis numéricas** - Esses gráficos mostram a distribuição das variáveis numéricas 'idade', 'bmi', 'HbA1c_level' e 'blood_glucose_level'. A linha suave (KDE) representa uma estimativa da densidade de probabilidade dos dados, que pode ser útil para identificar a forma da distribuição dos dados.")
 
-    # Histograma para 'age'
-    st.subheader('Distribuição de idade por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['age'], bins=30, kde=True, ax=ax)
-    st.pyplot(fig)
-    st.write("")
+    # cria 2 colunas
+    col1, col2 = st.columns(2)
 
-    # Histograma para 'bmi'
-    st.subheader('Distribuição de indice de massa corporal por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['bmi'], bins=30, kde=True, ax=ax)
-    st.pyplot(fig)
-    st.write("")
+    with st.container():
+        # Histograma para 'age'
+        col1.subheader('Distribuição de idade por pacientes')
+        fig, ax = plt.subplots(figsize=(5, 4))
+        sns.histplot(carregar_dados()['age'], bins=30, kde=True, ax=ax)
+        col1.pyplot(fig)
+        st.write("")
 
-    # Histograma para 'HbA1c_level'
-    st.subheader('Distribuição de hemoglobina glicada por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['HbA1c_level'], bins=30, kde=True, ax=ax)
-    st.pyplot(fig)
-    st.write("")
+        # Histograma para 'bmi'
+        col2.subheader('Distribuição de IMC por pacientes')
+        fig, ax = plt.subplots(figsize=(5, 4.1))
+        sns.histplot(carregar_dados()['bmi'], bins=30, kde=True, ax=ax)
+        col2.pyplot(fig)
+        st.write("")
 
-    # Histograma para 'blood_glucose_level'
-    st.subheader('Distribuição de nível de glicose no sangue por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['blood_glucose_level'], bins=30, kde=True, ax=ax)
-    st.pyplot(fig)
-    st.write("")
+        # Histograma para 'HbA1c_level'
+        col1.subheader('Distribuição de hemoglobina glicada por pacientes')
+        fig, ax = plt.subplots(figsize=(5, 4))
+        sns.histplot(carregar_dados()['HbA1c_level'], bins=30, kde=True, ax=ax)
+        col1.pyplot(fig)
+        st.write("")
+
+        # Histograma para 'blood_glucose_level'
+        col2.subheader('Distribuição de nível de glicose no sangue por pacientes')
+        fig, ax = plt.subplots(figsize=(5, 4))
+        sns.histplot(carregar_dados()['blood_glucose_level'], bins=30, kde=True, ax=ax)
+        col2.pyplot(fig)
+        st.write("")
 
     st.write("**Box plots para variáveis numéricas por 'diabetes'** - Esses gráficos mostram a distribuição das variáveis numéricas divididas por 'diabetes'. Isso permite ver a diferença na distribuição dessas variáveis para pessoas com e sem diabetes, que nos auxilia a identificar outliers (valores extremos). Cada box plot mostra a mediana (a linha no meio da caixa), os quartis superior e inferior (as bordas da caixa) e os 'bigodes', que indicam a faixa dentro da qual a maioria dos dados se encontra.")
 
+    # cria 3 colunas
+    col1, col2 = st.columns(2)
+
     # Boxplot para 'age'
-    st.subheader('Distribuição de Idade por Diabetes')
+    col1.subheader('Distribuição de Idade por Diabetes')
     fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='age', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
+    col1.pyplot(fig)
     st.write("")
 
     # Boxplot para 'bmi'
-    st.subheader('Distribuição de Indice de massa corporal por Diabetes')
+    col2.subheader('Distribuição de IMC por Diabetes')
     fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='bmi', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
+    col2.pyplot(fig)
     st.write("")
 
     # Boxplot para 'HbA1c_level'
-    st.subheader('Distribuição de Hemoglobina glicada por Diabetes')
+    col1.subheader('Distribuição de Hemoglobina glicada por Diabetes')
     fig, ax = plt.subplots(figsize=(5, 4))
     sns.boxplot(x='diabetes', y='HbA1c_level', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
+    col1.pyplot(fig)
     st.write("")
 
     # Boxplot para 'blood_glucose_level'
-    st.subheader('Distribuição de Nível de glicose no sangue por Diabetes')
-    fig, ax = plt.subplots(figsize=(5, 4))
+    col2.subheader('Distribuição de Nível de glicose no sangue por Diabetes')
+    fig, ax = plt.subplots(figsize=(5, 4.2))
     sns.boxplot(x='diabetes', y='blood_glucose_level', data=carregar_dados(), ax=ax)
-    st.pyplot(fig)
-    st.write("")
-
-    # >> ÁREA DE TESTE <<
-    # Create three columns
-    col1, col2, col3 = st.columns(3)
-
-    # First column
-    col1.subheader('Distribuição de idade por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['age'], bins=30, kde=True, ax=ax)
-    col1.pyplot(fig)
-
-    # Second column
-    col2.subheader('Distribuição de indice de massa corporal por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['bmi'], bins=30, kde=True, ax=ax)
     col2.pyplot(fig)
-
-    # Third column
-    col3.subheader('Distribuição de hemoglobina glicada por pacientes')
-    fig, ax = plt.subplots(figsize=(5, 4))
-    sns.histplot(carregar_dados()['HbA1c_level'], bins=30, kde=True, ax=ax)
-    col3.pyplot(fig)
+    st.write("")
 
     st.write("")
 
