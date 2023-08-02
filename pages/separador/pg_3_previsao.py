@@ -75,3 +75,11 @@ def prever_diabetes():
                 st.success(f'O modelo classificou o paciente como diabético com {prediction_proba*100:.2f}% de chance de acerto.')
             else:
                 st.success(f'O modelo classificou o paciente como não diabético com {prediction_proba*100:.2f}% de chance de acerto.')
+    
+    st.write("---")
+
+    #footer
+    with st.container():
+        col1, col2, col3 = st.columns(3)
+
+        col2.write("Developed By: [@Huelerssey](https://github.com/Huelerssey)")

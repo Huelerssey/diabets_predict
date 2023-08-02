@@ -70,7 +70,7 @@ diabetes: Indica se o paciente tem diabetes (1 para sim, 0 para não).
 
 ## 4 - LIMPEZA E TRATAMENTO DE DADOS - ##
 
-# verificando dados da tabela
+# # verificando dados da tabela
 # print(tabela.info())
 # <class 'pandas.core.frame.DataFrame'>
 # RangeIndex: 100000 entries, 0 to 99999
@@ -199,7 +199,7 @@ def excluir_outliers(df, nome_coluna):
 # plota todos os gráficos de todas as colunas para análise
 # plot_all_columns(tabela)
 
-#excluir outliers da coluna
+#excluir outliers da coluna IMC
 tabela, linhas_removidas = excluir_outliers(tabela, 'bmi')
 print(f'{linhas_removidas} linhas removidas da coluna bmi')
 
@@ -483,6 +483,6 @@ y_pred = clf.predict(x_teste)
 prob_diabetes = clf.predict_proba(x_teste)[:, 1]
 
 # colocando modelo para produção
-# joblib.dump(clf, "modelo_treinado.pkl")
+joblib.dump(clf, "modelo_treinado.pkl")
 
 ## 8 - ESCOLHENDO O MELHOR MODELO E COLOCANDO EM PRODUÇÃO - ##
