@@ -1,14 +1,8 @@
 import streamlit as st
-import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from src.data_utility import carregar_dados
 
-
-# função que otimiza o carregamento dos dados
-@st.cache_data
-def carregar_dados():
-    tabela = pd.read_pickle("arquivos_pkl/dataframe_modelado.pkl")
-    return tabela
 
 # função que constroi a página 2
 def construcao_projeto():
@@ -741,6 +735,8 @@ def construcao_projeto():
             st.success(f'O modelo classificou o paciente como não diabético com {prediction_proba*100:.2f}% de chance de acerto.')
     """
     st.code(codigo7, language='python')
+
+    st.write("Espero que esta jornada de ciência de dados tenha proporcionado uma visão valiosa de como se pode usar o aprendizado de máquina para abordar um problema de saúde real e significativo. E, o mais importante, agora temos uma ferramenta que pode nos ajudar a identificar indivíduos em risco de diabetes e potencialmente mudar o curso de suas vidas para melhor.")
     st.write("---")
 
     #footer
