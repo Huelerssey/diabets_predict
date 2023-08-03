@@ -1,12 +1,11 @@
 import streamlit as st
-import pandas as pd
 from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
 import json
 import pages.separador.pg_1_home as PaginaInicial
 import pages.separador.pg_2_projeto as ConstrucaoProjeto
 import pages.separador.pg_3_previsao as PreverDiabetes
-import pages.separador.pg_4_apresentacao as ApresentacaoProjeto
+import pages.separador.pg_4_dashboard as DashboardProjeto
 
 
 # configurações da pagina
@@ -32,9 +31,9 @@ with st.sidebar:
     opcao_selecionada = option_menu(
         menu_title="Menu Principal",
         menu_icon="justify",
-        options=["Inicio", "Projeto", "Previsão", "Apresentação"],
+        options=["Inicio", "Projeto", "Previsão", "Dashboard"],
         #https://icons.getbootstrap.com
-        icons=['house', 'pin-angle', 'clipboard-data', 'journal-medical'],
+        icons=['house', 'pin-angle', 'clipboard-data', 'journal-code'],
         default_index=0,
         orientation='vertical',
     )
@@ -92,5 +91,5 @@ elif opcao_selecionada == "Previsão":
     PreverDiabetes.prever_diabetes()
 
 # Retorna a pagina 3
-elif opcao_selecionada == "Apresentação":
-    ApresentacaoProjeto.apresentacao()
+elif opcao_selecionada == "Dashboard":
+    DashboardProjeto.dashboard()
