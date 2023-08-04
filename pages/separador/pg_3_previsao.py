@@ -76,6 +76,50 @@ def prever_diabetes():
             else:
                 st.success(f'O modelo classificou o paciente como não diabético com {prediction_proba*100:.2f}% de chance de acerto.')
     
+    # Coluna 2
+    with col2:
+
+        # Tabela de referência de IMC
+        st.markdown("<h6 style='text-align: center;'>Tabela de Referência de IMC</h6>", unsafe_allow_html=True)
+        imc_table = pd.DataFrame({
+            'Categoria': ['Abaixo do peso', 'Peso normal', 'Sobrepeso', 'Obesidade Grau I', 'Obesidade Grau II', 'Obesidade Grau III'],
+            'IMC': ['< 18.5', '18.5 - 24.9', '25 - 29.9', '30 - 34.9', '35 - 39.9', '≥ 40']
+        })
+        st.table(imc_table)
+
+        # Tabela de referência de HbA1c
+        st.markdown("<h6 style='text-align: center;'>Tabela de Referência de HbA1c</h6>", unsafe_allow_html=True)
+        hba1c_table = pd.DataFrame({
+            'Categoria': ['Normal', 'Pré-diabetes', 'Diabetes'],
+            'HbA1c (%)': ['< 5.7', '5.7 - 6.4', '≥ 6.5']
+        })
+        st.table(hba1c_table)
+
+        # Tabela de referência de glicose no sangue
+        st.markdown("<h6 style='text-align: center;'>Tabela de Referência de Glicose no Sangue</h6>", unsafe_allow_html=True)
+        glucose_table = pd.DataFrame({
+            'Categoria': ['Normal', 'Pré-diabetes', 'Diabetes'],
+            'Glicemia de Jejum (mg/dL)': ['< 100', '100 - 125', '≥ 126']
+        })
+        st.table(glucose_table)
+
+    # cria 3 colunas
+    col1, col2, col3 = st.columns(3)
+
+    with col2:
+        if st.button('⚠️ Clique aqui para um aviso importante ⚠️'):
+            st.warning("""
+            **As tabelas de referência para IMC, HbA1c e níveis de glicose no sangue fornecidas aqui são apenas para fins informativos e não devem ser usadas para autodiagnóstico ou para substituir o aconselhamento médico profissional.** 
+            """)
+
+    # # Tabela de referência de IMC
+    # st.markdown("<h3 style='text-align: center;'>Tabela de Referência de IMC</h3>", unsafe_allow_html=True)
+    # imc_table = pd.DataFrame({
+    #     'Categoria': ['Abaixo do peso', 'Peso normal', 'Sobrepeso', 'Obesidade Grau I', 'Obesidade Grau II', 'Obesidade Grau III'],
+    #     'IMC': ['< 18.5', '18.5 - 24.9', '25 - 29.9', '30 - 34.9', '35 - 39.9', '≥ 40']
+    # })
+    # st.table(imc_table)
+
     st.write("---")
 
     #footer
