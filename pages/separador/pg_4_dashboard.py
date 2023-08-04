@@ -7,7 +7,25 @@ def dashboard():
     df = carregar_tabela()
     st.markdown("<h1 style='text-align: center;'>📋 Dashboard 📋</h1>", unsafe_allow_html=True)
 
-    st.table(df.tail())
+    # conteiner dos KPI's
+    with st.container():
+        st.write("---")
+        # cria 3 colunas
+        col1, col2, col3 = st.columns(3)
+
+        # KPI total de pacientes da amostra
+        #total_patients = len(df)
+        col1.metric("Total de Pacientes válidos", value='63.247', delta='100 mil no dataset original', delta_color='inverse')
+
+        # KPI idade mais afetada
+        #velho = len(df[(df['age'] > 40) & (df['age'] <= 60)])
+        col2.metric(label="Pacientes de 40 a 60 anos", value='21.646', delta="Faixa etária mais afetada")
+
+        # KPI fator mais influente para o diagnóstico
+        correlation = df['blood_glucose_level'].corr(df['diabetes'])
+        correlation_formated = correlation * 100
+        col3.metric(label="Correlação Glicose - Diabetes", value=f"{correlation_formated:.2f}%", delta="fator mais influente para o diagnóstico")
+        st.write("---")
 
     # Count the number of patients with and without diabetes
     diabetes_counts = df['diabetes'].value_counts()

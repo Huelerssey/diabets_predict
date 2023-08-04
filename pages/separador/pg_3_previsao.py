@@ -112,14 +112,6 @@ def prever_diabetes():
             **As tabelas de referência para IMC, HbA1c e níveis de glicose no sangue fornecidas aqui são apenas para fins informativos e não devem ser usadas para autodiagnóstico ou para substituir o aconselhamento médico profissional.** 
             """)
 
-    # # Tabela de referência de IMC
-    # st.markdown("<h3 style='text-align: center;'>Tabela de Referência de IMC</h3>", unsafe_allow_html=True)
-    # imc_table = pd.DataFrame({
-    #     'Categoria': ['Abaixo do peso', 'Peso normal', 'Sobrepeso', 'Obesidade Grau I', 'Obesidade Grau II', 'Obesidade Grau III'],
-    #     'IMC': ['< 18.5', '18.5 - 24.9', '25 - 29.9', '30 - 34.9', '35 - 39.9', '≥ 40']
-    # })
-    # st.table(imc_table)
-
     st.write("---")
 
     #footer
