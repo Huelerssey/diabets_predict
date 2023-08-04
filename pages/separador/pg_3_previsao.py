@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
+from src.data_utility import carregar_modelo
 
 
 # função que constroi a página 3
@@ -14,7 +14,7 @@ def prever_diabetes():
     # coluna 1
     with col1:
         # Carregar o modelo treinado
-        clf = joblib.load("arquivos_pkl/modelo_treinado.pkl")
+        clf = carregar_modelo()
 
         # Função para fazer previsões
         def predict_diabetes(model, patient_info):

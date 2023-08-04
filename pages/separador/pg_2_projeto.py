@@ -1,7 +1,7 @@
 import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
-from src.data_utility import carregar_dados
+from src.data_utility import carregar_tabela
 
 
 # função que constroi a página 2
@@ -20,7 +20,7 @@ def construcao_projeto():
 
     st.header("📌 Entendimento da área/negócio")
     st.write("Vamos começar entendendo a base de dados, aqui está uma tabela com as 10 primeiras linhas do nosso dataset.")
-    st.dataframe(carregar_dados().head(10), hide_index=True)
+    st.dataframe(carregar_tabela().head(10), hide_index=True)
     st.write("gender: Sexo do paciente;")
     st.write("hypertension: Indica se o paciente tem hipertensão (1 para sim, 0 para não);")
     st.write("heart_disease: Indica se o paciente tem doença cardíaca (1 para sim, 0 para não);")
@@ -165,7 +165,7 @@ def construcao_projeto():
     st.subheader('Correlação das caracteristicas com a Diabetes')
 
     # cacula a correlação
-    correlation = carregar_dados().corr()[['diabetes']]
+    correlation = carregar_tabela().corr()[['diabetes']]
     correlation_sorted = correlation.sort_values(by='diabetes', ascending=False)
     
     # Calculate percentage and add % symbol
@@ -194,21 +194,21 @@ def construcao_projeto():
         # grafico de distribuição para diabetes
         col1.subheader("Distribuição de diabetes")
         fig, ax = plt.subplots(figsize=(5, 4.06))
-        sns.countplot(x='diabetes', data=carregar_dados(), ax=ax)
+        sns.countplot(x='diabetes', data=carregar_tabela(), ax=ax)
         col1.pyplot(fig)
         st.write("")
 
         # gráfico de distribuição para 'gender'
         col2.subheader('Distribuição de gênero')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.countplot(x='gender', data=carregar_dados(), ax=ax)
+        sns.countplot(x='gender', data=carregar_tabela(), ax=ax)
         col2.pyplot(fig)
         st.write("")
 
         # gráfico de distribuição para 'smoking_history'
         col3.subheader('Distribuição de tabagismo')
         fig, ax = plt.subplots(figsize=(5, 4.05))
-        sns.countplot(x='smoking_history', data=carregar_dados(), ax=ax)
+        sns.countplot(x='smoking_history', data=carregar_tabela(), ax=ax)
         col3.pyplot(fig)
         st.write("")
 
@@ -228,28 +228,28 @@ def construcao_projeto():
         # Histograma para 'age'
         col1.subheader('Distribuição de idade por pacientes')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.histplot(carregar_dados()['age'], bins=30, kde=True, ax=ax)
+        sns.histplot(carregar_tabela()['age'], bins=30, kde=True, ax=ax)
         col1.pyplot(fig)
         st.write("")
 
         # Histograma para 'bmi'
         col2.subheader('Distribuição de IMC por pacientes')
         fig, ax = plt.subplots(figsize=(5, 4.1))
-        sns.histplot(carregar_dados()['bmi'], bins=30, kde=True, ax=ax)
+        sns.histplot(carregar_tabela()['bmi'], bins=30, kde=True, ax=ax)
         col2.pyplot(fig)
         st.write("")
 
         # Histograma para 'HbA1c_level'
         col1.subheader('Distribuição de hemoglobina glicada por pacientes')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.histplot(carregar_dados()['HbA1c_level'], bins=30, kde=True, ax=ax)
+        sns.histplot(carregar_tabela()['HbA1c_level'], bins=30, kde=True, ax=ax)
         col1.pyplot(fig)
         st.write("")
 
         # Histograma para 'blood_glucose_level'
         col2.subheader('Distribuição de nível de glicose no sangue por pacientes')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.histplot(carregar_dados()['blood_glucose_level'], bins=30, kde=True, ax=ax)
+        sns.histplot(carregar_tabela()['blood_glucose_level'], bins=30, kde=True, ax=ax)
         col2.pyplot(fig)
         st.write("")
 
@@ -269,28 +269,28 @@ def construcao_projeto():
         # Boxplot para 'age'
         col1.subheader('Distribuição de Idade por Diabetes')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.boxplot(x='diabetes', y='age', data=carregar_dados(), ax=ax)
+        sns.boxplot(x='diabetes', y='age', data=carregar_tabela(), ax=ax)
         col1.pyplot(fig)
         st.write("")
 
         # Boxplot para 'bmi'
         col2.subheader('Distribuição de IMC por Diabetes')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.boxplot(x='diabetes', y='bmi', data=carregar_dados(), ax=ax)
+        sns.boxplot(x='diabetes', y='bmi', data=carregar_tabela(), ax=ax)
         col2.pyplot(fig)
         st.write("")
 
         # Boxplot para 'HbA1c_level'
         col1.subheader('Distribuição de Hemoglobina glicada por Diabetes')
         fig, ax = plt.subplots(figsize=(5, 4))
-        sns.boxplot(x='diabetes', y='HbA1c_level', data=carregar_dados(), ax=ax)
+        sns.boxplot(x='diabetes', y='HbA1c_level', data=carregar_tabela(), ax=ax)
         col1.pyplot(fig)
         st.write("")
 
         # Boxplot para 'blood_glucose_level'
         col2.subheader('Distribuição de Nível de glicose no sangue por Diabetes')
         fig, ax = plt.subplots(figsize=(5, 4.2))
-        sns.boxplot(x='diabetes', y='blood_glucose_level', data=carregar_dados(), ax=ax)
+        sns.boxplot(x='diabetes', y='blood_glucose_level', data=carregar_tabela(), ax=ax)
         col2.pyplot(fig)
         st.write("")
 
@@ -319,7 +319,7 @@ def construcao_projeto():
         #coluna 2
         # plota um gráfico de pizza
         fig, ax = plt.subplots(figsize=(5, 4))
-        carregar_dados()['diabetes'].value_counts().plot(kind='pie', autopct='%1.1f%%', ax=ax)
+        carregar_tabela()['diabetes'].value_counts().plot(kind='pie', autopct='%1.1f%%', ax=ax)
         ax.set_ylabel('')
         col2.pyplot(fig)
     
