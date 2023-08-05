@@ -1,6 +1,8 @@
 import streamlit as st
 from src.data_utility import carregar_tabela_pkl
-import plost
+import altair as alt
+import pandas as pd
+
 
 # função que constroi a página 4
 def dashboard():
@@ -10,9 +12,19 @@ def dashboard():
 
     st.markdown("<h1 style='text-align: center;'>📋 Dashboard 📋</h1>", unsafe_allow_html=True)
 
+    # Definir as faixas etárias
+    bins = [0, 20, 40, 60, 80]
+    labels = ['<=20', '21-40', '41-60', '61-80']
+    df['age_group'] = pd.cut(df['age'], bins=bins, labels=labels)
+
+    # Calcular as médias
+    mean_hba1c = df.groupby('age_group')['HbA1c_level'].mean().reset_index()
+    mean_glucose = df.groupby('age_group')['blood_glucose_level'].mean().reset_index()
+
     # conteiner dos KPI's
     with st.container():
         st.write("---")
+
         # cria 3 colunas
         col1, col2, col3 = st.columns(3)
 
@@ -28,56 +40,100 @@ def dashboard():
         correlation = df['blood_glucose_level'].corr(df['diabetes'])
         correlation_formated = correlation * 100
         col3.metric(label="Correlação Glicose - Diabetes", value=f"{correlation_formated:.2f}%", delta="fator mais influente para o diagnóstico")
-        st.write("---")
 
-    # conteiner dos gráficos de pizza
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    # conteiner da segunda linha horizontal
     with st.container():
 
-        # cria 3 colunas
-        col1, col2 = st.columns([1, 3])
-
+        # cria 2 colunas
+        col1, col2 = st.columns([1, 2])
+        
         with col1:
 
-            # Criar uma nova coluna 'diabetes_status' que transforma os valores 0 e 1 em categorias
-            df['diabetes_status'] = df['diabetes'].map({0: 'Não tem diabetes', 1: 'Tem diabetes'})
+            # Criar uma nova coluna 'paciente' que transforma os valores 0 e 1 em categorias
+            df['paciente'] = df['diabetes'].map({0: 'Não tem diabetes', 1: 'Tem diabetes'})
 
             # Contagem de valores de cada categoria
-            diabetes_counts = df['diabetes_status'].value_counts().reset_index()
+            diabetes_counts = df['paciente'].value_counts().reset_index()
 
-            # Renomear as colunas
-            diabetes_counts.columns = ['diabetes_status', 'count']
-
-            # Construir o gráfico de pizza
-            plost.pie_chart(
-                data=diabetes_counts,
-                theta='count',
-                color='diabetes_status',
-                title="Distribuição de pacientes com/sem diabetes",
+           # Cria o gráfico de pizza
+            chart = alt.Chart(diabetes_counts).mark_arc(innerRadius=0).encode(
+                theta='count:Q',
+                color='paciente:N',
+                tooltip=['paciente:N', 'count:Q']
+            ).properties(
+                title='Distribuição de pacientes com/sem diabetes',
                 width=400,
-                height=400,
-                use_container_width=False
+                height=300
             )
+
+            # Exibe o gráfico Distribuição de pacientes com/sem diabetes
+            st.altair_chart(chart)
 
         with col2:
 
-            # Criar uma nova coluna 'gender_status' que transforma os valores 0 e 1 em 'Homem' e 'Mulher'
-            df['gender_status'] = df['gender'].map({0: 'Homem', 1: 'Mulher'})
+            # Gráfico de linha para HbA1c
+            hba1c_chart = alt.Chart(mean_hba1c).mark_line().encode(
+                x='age_group:O',
+                y='HbA1c_level:Q',
+                tooltip=['age_group', 'HbA1c_level']
+            ).properties(
+                title='Média de HbA1c por faixa etária',
+                width=900,
+                height=300
+            )
+            st.altair_chart(hba1c_chart)
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    # conteiner da terceira linha horizontal
+    with st.container():
+        
+        #cria 2 colunas
+        col1, col2 = st.columns([1, 2])
+
+        with col1:
+
+            # Criar uma nova coluna genero que transforma os valores 0 e 1 em categorias
+            df['genero'] = df['gender'].map({0: 'Feminino', 1: 'Masculino'})
 
             # Contagem de valores de cada categoria
-            gender_counts = df['gender_status'].value_counts().reset_index()
+            gender_counts = df['genero'].value_counts().reset_index()
 
             # Renomear as colunas
-            gender_counts.columns = ['gender_status', 'count']
+            gender_counts.columns = ['genero', 'count']
 
-            # Construir o gráfico de rosca
-            plost.pie_chart(
-                data=gender_counts,
-                theta='count',
-                color='gender_status',
-                title="Distribuição de gênero dos pacientes",
+            # Cria o gráfico de pizza
+            chart = alt.Chart(gender_counts).mark_arc(innerRadius=0).encode(
+                theta='count:Q',
+                color='genero:N',
+                tooltip=['genero:N', 'count:Q']
+            ).properties(
+                title='Distribuição de pacientes por gênero',
                 width=400,
-                height=400,
-                use_container_width=False
+                height=300
             )
 
+            # Exibe o gráfico Distribuição de pacientes por gênero
+            st.altair_chart(chart)
 
+        with col2:
+
+            # Gráfico de linha para glicose no sangue
+            glucose_chart = alt.Chart(mean_glucose).mark_line().encode(
+                x='age_group:O',
+                y='blood_glucose_level:Q',
+                tooltip=['age_group', 'blood_glucose_level']
+            ).properties(
+                title='Média de glicose no sangue por faixa etária',
+                width=900,
+                height=300
+            )
+            st.altair_chart(glucose_chart)
