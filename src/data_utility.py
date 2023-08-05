@@ -3,9 +3,9 @@ import pandas as pd
 from joblib import load
 
 
-# função que otimiza o carregamento dos dados da tabela
+# função que otimiza o carregamento dos dados da tabela pkl
 @st.cache_data
-def carregar_tabela():
+def carregar_tabela_pkl():
     tabela = pd.read_pickle("arquivos_pkl/dataframe_modelado.pkl")
     return tabela
 
