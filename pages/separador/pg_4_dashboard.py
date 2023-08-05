@@ -1,10 +1,13 @@
 import streamlit as st
-from src.data_utility import carregar_tabela
-
+from src.data_utility import carregar_tabela_pkl
+import plost
 
 # função que constroi a página 4
 def dashboard():
-    df = carregar_tabela()
+
+    # variável que armazena a tabela em csv
+    df = carregar_tabela_pkl()
+
     st.markdown("<h1 style='text-align: center;'>📋 Dashboard 📋</h1>", unsafe_allow_html=True)
 
     # conteiner dos KPI's
@@ -27,22 +30,54 @@ def dashboard():
         col3.metric(label="Correlação Glicose - Diabetes", value=f"{correlation_formated:.2f}%", delta="fator mais influente para o diagnóstico")
         st.write("---")
 
-    # Count the number of patients with and without diabetes
-    diabetes_counts = df['diabetes'].value_counts()
+    # conteiner dos gráficos de pizza
+    with st.container():
 
-    # Plot a bar chart
-    st.bar_chart(diabetes_counts)
+        # cria 3 colunas
+        col1, col2 = st.columns([1, 3])
 
-    # Filter the data for patients with and without diabetes
-    df_with_diabetes = df[df['diabetes'] == 1]
-    df_without_diabetes = df[df['diabetes'] == 0]
+        with col1:
 
-    # Group the data by age and calculate the mean blood glucose level
-    df_with_diabetes_grouped = df_with_diabetes.groupby('age')['blood_glucose_level'].mean()
-    df_without_diabetes_grouped = df_without_diabetes.groupby('age')['blood_glucose_level'].mean()
+            # Criar uma nova coluna 'diabetes_status' que transforma os valores 0 e 1 em categorias
+            df['diabetes_status'] = df['diabetes'].map({0: 'Não tem diabetes', 1: 'Tem diabetes'})
 
-    # Plot a line chart
-    st.line_chart(df_with_diabetes_grouped)
-    st.line_chart(df_without_diabetes_grouped)
+            # Contagem de valores de cada categoria
+            diabetes_counts = df['diabetes_status'].value_counts().reset_index()
+
+            # Renomear as colunas
+            diabetes_counts.columns = ['diabetes_status', 'count']
+
+            # Construir o gráfico de pizza
+            plost.pie_chart(
+                data=diabetes_counts,
+                theta='count',
+                color='diabetes_status',
+                title="Distribuição de pacientes com/sem diabetes",
+                width=400,
+                height=400,
+                use_container_width=False
+            )
+
+        with col2:
+
+            # Criar uma nova coluna 'gender_status' que transforma os valores 0 e 1 em 'Homem' e 'Mulher'
+            df['gender_status'] = df['gender'].map({0: 'Homem', 1: 'Mulher'})
+
+            # Contagem de valores de cada categoria
+            gender_counts = df['gender_status'].value_counts().reset_index()
+
+            # Renomear as colunas
+            gender_counts.columns = ['gender_status', 'count']
+
+            # Construir o gráfico de rosca
+            plost.pie_chart(
+                data=gender_counts,
+                theta='count',
+                color='gender_status',
+                title="Distribuição de gênero dos pacientes",
+                width=400,
+                height=400,
+                use_container_width=False
+            )
 
 
