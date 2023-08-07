@@ -2,11 +2,21 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from src.data_utility import carregar_modelo
+from streamlit_extras.colored_header import colored_header
 
 
 # função que constroi a página 3
 def prever_diabetes():
+
+    #titulo
     st.markdown("<h1 style='text-align: center;'>📊 Modelo de Previsão de Diabetes 📊</h1>", unsafe_allow_html=True)
+    
+    # marcador verde
+    colored_header(
+    label="",
+    description="",
+    color_name="light-blue-70"
+    )
 
     # define colunas na pagina
     col1, col2 = st.columns(2)
@@ -103,6 +113,13 @@ def prever_diabetes():
         })
         st.table(glucose_table)
 
+    # marcador verde
+    colored_header(
+    label="",
+    description="",
+    color_name="light-blue-70"
+    )
+
     # cria 3 colunas
     col1, col2, col3 = st.columns(3)
 
@@ -111,11 +128,3 @@ def prever_diabetes():
             st.warning("""
             **As tabelas de referência para IMC, HbA1c e níveis de glicose no sangue fornecidas aqui são apenas para fins informativos e não devem ser usadas para autodiagnóstico ou para substituir o aconselhamento médico profissional.** 
             """)
-
-    st.write("---")
-
-    #footer
-    with st.container():
-        col1, col2, col3 = st.columns(3)
-
-        col2.write("Developed By: [@Huelerssey](https://github.com/Huelerssey)")
