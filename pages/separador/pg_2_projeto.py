@@ -2,12 +2,19 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 from src.data_utility import carregar_tabela_pkl
+from streamlit_extras.colored_header import colored_header
 
 
 # função que constroi a página 2
 def construcao_projeto():
     st.markdown("<h1 style='text-align: center;'>📌 Construção do Projeto 📌</h1>", unsafe_allow_html=True)
-    st.write("---")
+    
+    # marcador vermelho
+    colored_header(
+    label="",
+    description="",
+    color_name="light-blue-70"
+    )
 
     st.header("📌 Introdução")
     st.write("Neste projeto, decidimos usar o poder da ciência de dados para prever quem poderia ser mais suscetível a desenvolver diabetes. Com a ajuda do machine learning, buscamos desenvolver um modelo preditivo que possa nos ajudar a identificar os indivíduos em risco, permitindo intervenções precoces e talvez até mesmo a prevenção da doença.")
@@ -737,7 +744,12 @@ def construcao_projeto():
     st.code(codigo7, language='python')
 
     st.write("Espero que esta jornada de ciência de dados tenha proporcionado uma visão valiosa de como se pode usar o aprendizado de máquina para abordar um problema de saúde real e significativo. E, o mais importante, agora temos uma ferramenta que pode nos ajudar a identificar indivíduos em risco de diabetes e potencialmente mudar o curso de suas vidas para melhor.")
-    st.write("---")
+    # marcador vermelho
+    colored_header(
+    label="",
+    description="",
+    color_name="light-blue-70"
+    )
 
     #footer
     with st.container():

@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
+from streamlit_extras.colored_header import colored_header
 import json
 import pages.separador.pg_1_home as PaginaInicial
 import pages.separador.pg_2_projeto as ConstrucaoProjeto
@@ -26,8 +27,18 @@ with open("animacoes/pagina_inicial3.json") as source:
 
 # Menu de navegação lateral
 with st.sidebar:
+
+    # animação
     st_lottie(animacao_3, height=100, width=300)
-    st.write("---")
+
+    # marcador vermelho
+    colored_header(
+    label="",
+    description="",
+    color_name="light-blue-70"
+    )
+
+    # menu lateral
     opcao_selecionada = option_menu(
         menu_title="Menu Principal",
         menu_icon="justify",
@@ -54,9 +65,17 @@ with st.sidebar:
     st.write("")
     st.write("")
     st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
 
     # Footer da barra lateral
-    st.write("---")
+    colored_header(
+    label="",
+    description="",
+    color_name="light-blue-70"
+    )
     st.markdown("<h5 style='text-align: center; color: lightgray;'>Developed By: Huelerssey Rodrigues</h5>", unsafe_allow_html=True)
     st.markdown("""
     <div style="display: flex; justify-content: space-between;">
